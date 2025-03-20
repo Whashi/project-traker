@@ -1,0 +1,39 @@
+.new-project-container {
+  width: 55rem;
+  height: 40rem;
+  background-color: darkslategray;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-project-form {
+  width: 34rem;
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+label {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+input {
+  height: 1.2rem;
+  font-size: 1.1rem;
+}
+
+.text-input {
+  width: 24rem;
+}
+
+.button-container {
+  width: 24rem;
+  display: flex;
+  justify-content: space-evenly;
+  justify-self: center;
+}

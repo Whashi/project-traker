@@ -1,0 +1,10 @@
+.project {
+    width: 55rem;
+    height: 40rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color:darkslategray;
+    border-radius: 1rem;
+}

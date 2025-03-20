@@ -1,0 +1,30 @@
+.sidebar {
+    width: 17rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: darkgray;
+    border-radius: 1rem;
+}
+
+.project-list {
+    align-items: center;
+    padding: 0%;
+}
+
+.project-list-item {
+    width: 15rem;
+    display: flex;
+    border-style: solid;
+    border-radius: 1rem;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1a1a1a;
+    cursor: pointer;
+}
+
+.select-project-button {
+    height: 2rem;
+    width: 4rem;
+    padding: 0;
+}
