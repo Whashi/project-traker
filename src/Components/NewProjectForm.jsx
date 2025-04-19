@@ -1,25 +1,31 @@
-import React from "react";
+import { useState } from "react";
 import styles from "./NewProjectForm.module.css";
 
-const NewProjectForm = ({
-
-  // refactor to use state instead of refs
-  projectName,
-  projectDescription,
-  projectDueDate,
-  createNewProject,
-  cancel,
-  save,
-}) => {
+const NewProjectForm = ({ createNewProject, cancel }) => {
   const today = new Date().toISOString().split("T")[0];
+
+  const [newProject, setNewProject] = useState({
+    title: "",
+    description: "",
+    dueDate: today,
+    toDoItems: [],
+  });
 
   return (
     <div className={styles["new-project-container"]}>
-      <form className={styles["new-project-form"]} onSubmit={createNewProject}>
+      <form
+        className={styles["new-project-form"]}
+        onSubmit={() => {
+          createNewProject(newProject);
+        }}
+      >
         <label>Title</label>
         <input
           className={styles["text-input"]}
-          ref={projectName}
+          value={newProject.title}
+          onChange={(e) => {
+            setNewProject({ ...newProject, title: e.target.value });
+          }}
           placeholder="What do you want to call your project?"
           required
           autoFocus
@@ -28,27 +34,25 @@ const NewProjectForm = ({
         <input
           className={styles["text-input"]}
           type="text"
-          ref={projectDescription}
+          value={newProject.description}
+          onChange={(e) => {
+            setNewProject({ ...newProject, description: e.target.value });
+          }}
           placeholder="What are the details of your project?"
           required
         />
         <label>Due Date</label>
-        <input type="date" ref={projectDueDate} defaultValue={today} required />
+        <input
+          type="date"
+          value={newProject.dueDate}
+          onChange={(e) => {
+            setNewProject({ ...newProject, dueDate: e.target.value });
+          }}
+          required
+        />
 
         <div className={styles["button-container"]}>
-          <button
-            type="submit"
-            onClick={() =>
-              save({
-                title: projectName,
-                description: projectDescription,
-                dueDate: projectDueDate,
-                toDoItems: [],
-              })
-            }
-          >
-            Save
-          </button>
+          <button type="submit">Save</button>
           <button onClick={() => cancel(false)}>Cancel</button>
         </div>
       </form>

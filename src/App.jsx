@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./App.module.css";
 
 import NewProjectForm from "./Components/NewProjectForm";
@@ -8,7 +8,7 @@ import Sidebar from "./Components/Sidebar";
 function App() {
   const [projects, setProjects] = useState([
     // {
-    //   name: "Learn React",
+    //   title: "Learn React",
     //   description:
     //     "Follow Youtube tutorials and Udemy courses to learn the fundamentals of React",
     //   dueDate: new Date("2025-03-06"),
@@ -17,11 +17,15 @@ function App() {
   ]);
 
   useEffect(() => {
+    getProjects();
+  }, []);
+
+  function getProjects() {
     fetch("http://localhost:3000/api/projects")
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
-        }       
+        }
         return response.json();
       })
       .then((data) => {
@@ -30,37 +34,47 @@ function App() {
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
-  }, [])
-  
+  }
 
   const [currentProject, setCurrentProject] = useState(null);
   const [isCreatingProject, setIsCreatingProject] = useState(false);
 
-  const projectName = useRef();
-  const projectDescription = useRef();
-  const projectDueDate = useRef();
-
-  function createNewProject(e) {
-    e.preventDefault();
-    const newProject = {
-      title: projectName.current.value,
-      description: projectDescription.current.value,
-      dueDate: new Date(projectDueDate.current.value),
-      toDoItems: [],
-    };
-    setProjects((prevProjects) => [...prevProjects, newProject]);
+  function createNewProject(newProject) {
+    saveNewProject(newProject);
     setCurrentProject(newProject);
     setIsCreatingProject(false);
   }
 
-  function selectProject(selectedProjectName) {
-    const selected = projects.find(
-      (project) => project.title === selectedProjectName
-    );
+  function selectProject(projectId) {
+    const selected = projects.find((project) => project._id === projectId);
     console.log(selected);
     
+
     setCurrentProject(selected);
     setIsCreatingProject(false);
+  }
+
+  async function saveNewProject(project) {
+    try {
+      const response = await fetch("http://localhost:3000/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(project),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      getProjects();
+      selectProject(data._id);
+      setIsCreatingProject(false);
+    } catch (error) {
+      console.error("Error saving project:", error);
+    }
   }
 
   function updateProjectToDos(projectName, newToDoItems) {
@@ -81,30 +95,30 @@ function App() {
     });
   }
 
-  async function saveNewProject(project) {
-    console.log(project);
-    
-    
+  async function updateProject(projectId, updatedProject) {
     try {
-      const response = await fetch("http://localhost:3000/api/projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(project),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/projects/${projectId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedProject),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const data = await response.json();
-      setProjects((prevProjects) => [...prevProjects, data]);
-      setIsCreatingProject(false);
+      getProjects();
+      selectProject(data._id);
     } catch (error) {
       console.error("Error saving project:", error);
     }
-    
+
+    // setCurrentProject(updatedProject);
   }
 
   return (
@@ -114,16 +128,20 @@ function App() {
         selectProject={selectProject}
         clickHandler={setIsCreatingProject}
       />
-
+      
       {!isCreatingProject ? (
-        <Project projectData={currentProject} addToDo={updateProjectToDos} />
+        currentProject ? (
+          <Project
+            projectData={currentProject}
+            addToDo={updateProjectToDos}
+            updateProject={updateProject}
+          />
+        ) : (
+          <p className={styles.select}>Select a project</p>
+        )
       ) : (
         <NewProjectForm
-          projectName={projectName}
-          projectDescription={projectDescription}
-          projectDueDate={projectDueDate}
           createNewProject={createNewProject}
-          save={saveNewProject}
           cancel={setIsCreatingProject}
         />
       )}
