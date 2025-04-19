@@ -9,11 +9,11 @@ const Sidebar = ({ projects, selectProject, clickHandler }) => {
         {projects.map((project, index) => {
           return (
             <li
-              onClick={() => selectProject(project.name)}
+              onClick={() => selectProject(project.title)}
               className={styles["project-list-item"]}
               key={index}
             >
-              <h3 className={styles["project-title"]}>{project.name}</h3>
+              <h3 className={styles["project-title"]}>{project.title}</h3>
             </li>
           );
         })}

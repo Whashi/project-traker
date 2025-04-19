@@ -2,11 +2,14 @@ import React from "react";
 import styles from "./NewProjectForm.module.css";
 
 const NewProjectForm = ({
+
+  // refactor to use state instead of refs
   projectName,
   projectDescription,
   projectDueDate,
   createNewProject,
-  clickHandler,
+  cancel,
+  save,
 }) => {
   const today = new Date().toISOString().split("T")[0];
 
@@ -33,8 +36,20 @@ const NewProjectForm = ({
         <input type="date" ref={projectDueDate} defaultValue={today} required />
 
         <div className={styles["button-container"]}>
-          <button type="submit">Save</button>
-          <button onClick={() => clickHandler(false)}>Cancel</button>
+          <button
+            type="submit"
+            onClick={() =>
+              save({
+                title: projectName,
+                description: projectDescription,
+                dueDate: projectDueDate,
+                toDoItems: [],
+              })
+            }
+          >
+            Save
+          </button>
+          <button onClick={() => cancel(false)}>Cancel</button>
         </div>
       </form>
     </div>

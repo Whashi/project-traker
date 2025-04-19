@@ -19,7 +19,7 @@ const Project = ({ projectData, addToDo }) => {
 
   function saveToDo() {
     const updatedToDoList = [...projectData.toDoList, newToDo];
-    addToDo(projectData.name, updatedToDoList);
+    addToDo(projectData.title, updatedToDoList);
     setNewToDo("");
     isNotAdding();
   }
@@ -29,21 +29,22 @@ const Project = ({ projectData, addToDo }) => {
     const updatedToDoList = projectData.toDoList.filter(
       (item, i) => i !== index
     );
-    addToDo(projectData.name, updatedToDoList);
+    addToDo(projectData.title, updatedToDoList);
   }
 
   return (
     <div className={styles.project}>
       {projectData ? (
         <div>
-          <h2>{projectData.name}</h2>
+          <h2>{projectData.title}</h2>
           <h3>Project Description:</h3>
           <p>{projectData.description}</p>
           <h3>Due Date:</h3>
-          <p>{projectData.dueDate.toDateString()}</p>
+          <p>{projectData.dueDate}</p> 
+          {/* .toDateString() */}
           <h3>To-Do List:</h3>
           <ol>
-            {projectData.toDoList.map((item, index) => {
+            {projectData.toDoItems.map((item, index) => {
               return (
                 <li key={index}>
                   {item}
